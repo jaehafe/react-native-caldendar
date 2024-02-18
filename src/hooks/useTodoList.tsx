@@ -70,6 +70,7 @@ export default function useTodoList({ selectedDate }: useTodoListProps) {
   });
 
   return {
+    todoList,
     filteredTodoList,
     input,
     setInput,

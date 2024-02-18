@@ -27,7 +27,7 @@ export default function CalendarOneScreen() {
     subtractOneMonth,
     addOneMonth,
   } = useCalendar({ now });
-  const { filteredTodoList, input, setInput, addTodo, removeTodo, toggleTodo, resetInput } = useTodoList({
+  const { todoList, filteredTodoList, input, setInput, addTodo, removeTodo, toggleTodo, resetInput } = useTodoList({
     selectedDate,
   });
 
@@ -97,6 +97,7 @@ export default function CalendarOneScreen() {
   return (
     <Pressable style={styles.container} onPress={Keyboard.dismiss}>
       <Calendar
+        todoList={todoList}
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
         showDatePicker={showDatePicker}

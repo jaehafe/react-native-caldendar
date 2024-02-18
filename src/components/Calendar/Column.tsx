@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 interface ColumnProps {
   text: number | string;
@@ -8,11 +8,12 @@ interface ColumnProps {
   disabled?: boolean;
   onPress?: ((event: GestureResponderEvent) => void) | undefined;
   isSelected?: boolean;
+  hasTodo?: boolean;
 }
 
 const columnSize = 35;
 
-export default function Column({ text, color, opacity, disabled, onPress, isSelected }: ColumnProps) {
+export default function Column({ text, color, opacity, disabled, onPress, isSelected, hasTodo }: ColumnProps) {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -22,7 +23,7 @@ export default function Column({ text, color, opacity, disabled, onPress, isSele
         { backgroundColor: isSelected ? '#c2c2c2' : 'transparent', borderRadius: columnSize / 2 },
       ]}
     >
-      <Text style={[{ color, opacity }]}>{text}</Text>
+      <Text style={[{ color, opacity, fontWeight: hasTodo ? 'bold' : 'normal' }]}>{text}</Text>
     </TouchableOpacity>
   );
 }

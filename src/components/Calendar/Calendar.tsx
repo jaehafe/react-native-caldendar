@@ -6,8 +6,10 @@ import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 import { getCalendarColumns, getDayColor, getDayText } from '@/utils';
 import ArrowButton from './ArrowButton';
 import Column from './Column';
+import { TodoItemType } from '@/hooks/useTodoList';
 
 interface CalendarProps {
+  todoList: TodoItemType[];
   selectedDate: Dayjs;
   setSelectedDate: React.Dispatch<React.SetStateAction<dayjs.Dayjs>>;
   showDatePicker: VoidFunction;
@@ -16,6 +18,7 @@ interface CalendarProps {
 }
 
 export default function Calendar({
+  todoList,
   selectedDate,
   setSelectedDate,
   showDatePicker,
@@ -64,9 +67,11 @@ export default function Calendar({
     const isSelected = dayjs(date).isSame(selectedDate, 'date');
 
     const onPressDate = () => setSelectedDate(date);
+    const hasTodo = todoList.some((todo) => dayjs(todo.date).isSame(dayjs(date), 'date'));
 
     return (
       <Column
+        hasTodo={hasTodo}
         isSelected={isSelected}
         onPress={onPressDate}
         key={day}
