@@ -5,6 +5,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import Column from '@/components/Calendar/Column';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 import ArrowButton from '@/components/Calendar/ArrowButton';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 const columnSize = 35;
 
@@ -12,7 +13,29 @@ export default function CalendarOneScreen() {
   const now = dayjs();
   const [selectedDate, setSelectedDate] = React.useState<Dayjs>(now);
   const columns = getCalendarColumns(selectedDate);
-  console.log('selectedDate>>', selectedDate);
+  const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date: Date) => {
+    setSelectedDate(dayjs(date));
+    hideDatePicker();
+  };
+
+  const onPressLeftArrow = () => {
+    const newSelectedDate = dayjs(selectedDate).subtract(1, 'month');
+    setSelectedDate(newSelectedDate);
+  };
+  const onPressRightArrow = () => {
+    const newSelectedDate = dayjs(selectedDate).add(1, 'month');
+    setSelectedDate(newSelectedDate);
+  };
 
   const CalendarHeader = () => {
     const currentDateText = dayjs(selectedDate).format('YYYY.MM.DD.');
@@ -20,17 +43,17 @@ export default function CalendarOneScreen() {
     return (
       <View>
         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <ArrowButton onPress={() => {}}>
+          <ArrowButton onPress={onPressLeftArrow}>
             <ChevronLeft color={'black'} />
           </ArrowButton>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={showDatePicker}>
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
               <Text style={styles.currentText}>{currentDateText}</Text>
             </View>
           </TouchableOpacity>
 
-          <ArrowButton onPress={() => {}}>
+          <ArrowButton onPress={onPressRightArrow}>
             <ChevronRight color={'black'} />
           </ArrowButton>
         </View>
@@ -77,6 +100,13 @@ export default function CalendarOneScreen() {
         numColumns={7}
         renderItem={renderItem}
         ListHeaderComponent={CalendarHeader}
+      />
+
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
       />
     </View>
   );
