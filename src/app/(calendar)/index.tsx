@@ -6,35 +6,33 @@ import Column from '@/components/Calendar/Column';
 import { ChevronLeft, ChevronRight } from 'lucide-react-native';
 import ArrowButton from '@/components/Calendar/ArrowButton';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import useCalendar from '@/hooks/useCalendar';
+import useTodoList from '@/hooks/useTodoList';
 
 const columnSize = 35;
 
 export default function CalendarOneScreen() {
   const now = dayjs();
-  const [selectedDate, setSelectedDate] = React.useState<Dayjs>(now);
+
+  const {
+    selectedDate,
+    setSelectedDate,
+    isDatePickerVisible,
+    showDatePicker,
+    hideDatePicker,
+    handleConfirm,
+    subtractOneMonth,
+    addOneMonth,
+  } = useCalendar({ now });
+  const {} = useTodoList({ selectedDate });
+
   const columns = getCalendarColumns(selectedDate);
-  const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
-
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
-
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
-
-  const handleConfirm = (date: Date) => {
-    setSelectedDate(dayjs(date));
-    hideDatePicker();
-  };
 
   const onPressLeftArrow = () => {
-    const newSelectedDate = dayjs(selectedDate).subtract(1, 'month');
-    setSelectedDate(newSelectedDate);
+    subtractOneMonth();
   };
   const onPressRightArrow = () => {
-    const newSelectedDate = dayjs(selectedDate).add(1, 'month');
-    setSelectedDate(newSelectedDate);
+    addOneMonth();
   };
 
   const CalendarHeader = () => {
