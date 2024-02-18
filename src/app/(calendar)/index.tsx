@@ -10,10 +10,12 @@ const columnSize = 35;
 
 export default function CalendarOneScreen() {
   const now = dayjs();
-  const columns = getCalendarColumns(now);
+  const [selectedDate, setSelectedDate] = React.useState<Dayjs>(now);
+  const columns = getCalendarColumns(selectedDate);
+  console.log('selectedDate>>', selectedDate);
 
   const CalendarHeader = () => {
-    const currentDateText = dayjs(now).format('YYYY.MM.DD.');
+    const currentDateText = dayjs(selectedDate).format('YYYY.MM.DD.');
 
     return (
       <View>
@@ -35,7 +37,9 @@ export default function CalendarOneScreen() {
 
         <View style={{ flexDirection: 'row' }}>
           {[0, 1, 2, 3, 4, 5, 6].map((day, index) => {
-            return <Column key={`${day} + ${index}`} text={getDayText(day)} color={getDayColor(day)} opacity={1} />;
+            return (
+              <Column disabled key={`${day} + ${index}`} text={getDayText(day)} color={getDayColor(day)} opacity={1} />
+            );
           })}
         </View>
       </View>
@@ -45,11 +49,24 @@ export default function CalendarOneScreen() {
   const renderItem = ({ item: date }: { item: Dayjs }) => {
     const dateText = dayjs(date).get('date');
     const day = dayjs(date).get('day');
-
-    const isCurrentMonth = dayjs(date).isSame(now, 'month');
+    const isCurrentMonth = dayjs(date).isSame(selectedDate, 'month');
     const textOpacity = isCurrentMonth ? 1 : 0.4;
+    const isSelected = dayjs(date).isSame(selectedDate, 'date');
 
-    return <Column key={day} text={dateText} color={getDayColor(day)} opacity={textOpacity} />;
+    const onPressDate = () => {
+      setSelectedDate(date);
+    };
+
+    return (
+      <Column
+        isSelected={isSelected}
+        onPress={onPressDate}
+        key={day}
+        text={dateText}
+        color={getDayColor(day)}
+        opacity={textOpacity}
+      />
+    );
   };
 
   return (
